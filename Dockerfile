@@ -35,8 +35,12 @@ RUN helm version \
 RUN wget https://github.com/roboll/helmfile/releases/download/v0.139.9/helmfile_linux_amd64 -O /usr/local/bin/helmfile --no-verbose \
     && chmod +x /usr/local/bin/helmfile
 
-# # Install vault
+# Install vault
 
 RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - \
     && apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" \
     && apt-get update && apt-get install -y vault
+
+# Only do that when not running vault as server
+
+RUN setcap cap_ipc_lock= /usr/bin/vault
