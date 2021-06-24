@@ -6,7 +6,7 @@ ENV TZ=Europe/Berlin
 # Install basic packages
 
 RUN apt-get update && apt-get install -y \
-    apt-transport-https curl git pwgen python3-pip software-properties-common wget unzip
+    apt-transport-https curl git jq pwgen python3-pip software-properties-common wget unzip
 
 # Install PIP packages
 
