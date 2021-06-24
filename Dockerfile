@@ -2,7 +2,7 @@ FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Berlin
-ENV HELM_HOME="/home/helm/.helm"
+ENV HELM_HOME="/root/.helm"
 
 # Install basic packages
 
@@ -43,11 +43,4 @@ RUN setcap cap_ipc_lock= /usr/bin/vault
 
 # Install Helm plugins
 
-RUN adduser -u 1000 helm
-
-USER helm
-
-WORKDIR /home/helm
-
-RUN \
-  helm plugin install https://github.com/databus23/helm-diff
+RUN helm plugin install https://github.com/databus23/helm-diff
