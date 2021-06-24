@@ -1,12 +1,13 @@
 FROM ubuntu:20.04
 
-ARG DEBIAN_FRONTEND=noninteractive  
+ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Berlin
+ENV HELM_HOME="/home/helm/.helm"
 
 # Install basic packages
 
 RUN apt-get update && apt-get install -y \
-    apt-transport-https curl git jq ncat pwgen python3-pip software-properties-common wget unzip
+    apt-transport-https curl git jq ncat pwgen python3-pip software-properties-common sudo wget unzip
 
 # Install PIP packages
 
@@ -35,12 +36,18 @@ RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - \
     && apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" \
     && apt-get update && apt-get install -y vault
 
-# Only do that when not running vault as server
+# Fix vault permission problem - only do that when not running vault as server,
+# see https://stackoverflow.com/q/64284884/4278102
 
 RUN setcap cap_ipc_lock= /usr/bin/vault
 
-# Install Helm plugins in entrypoint as otherwise they somehow cannot be used
+# Install Helm plugins
 
-COPY entrypoint.sh /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
-CMD ["/bin/sh"]
+RUN adduser -u 1000 helm
+
+USER helm
+
+WORKDIR /home/helm
+
+RUN \
+  helm plugin install https://github.com/databus23/helm-diff
