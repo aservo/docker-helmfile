@@ -24,12 +24,6 @@ RUN curl -s https://baltocdn.com/helm/signing.asc | apt-key add - \
     && echo "deb https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm-stable-debian.list \
     && apt-get update && apt-get install -y helm
 
-# Install Helm plugins
-
-RUN helm version \
-    && helm plugin install https://github.com/databus23/helm-diff --version 3.1.3 \
-    && helm plugin install https://github.com/aslafy-z/helm-git --version 0.10.0
-
 # Install Helmfile
 
 RUN wget https://github.com/roboll/helmfile/releases/download/v0.139.9/helmfile_linux_amd64 -O /usr/local/bin/helmfile --no-verbose \
@@ -44,3 +38,9 @@ RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - \
 # Only do that when not running vault as server
 
 RUN setcap cap_ipc_lock= /usr/bin/vault
+
+# Install Helm plugins in entrypoint as otherwise they somehow cannot be used
+
+COPY entrypoint.sh /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/bin/sh"]
