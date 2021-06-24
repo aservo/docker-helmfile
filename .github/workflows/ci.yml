@@ -35,12 +35,14 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
-        id: build
+        if: github.event_name	!= 'release'
+        uses: docker/build-push-action@v2
+
+      - name: Release
+        if: github.event_name	== 'release'
         uses: docker/build-push-action@v2
         with:
-          push: ${{ github.event_name	== 'release' }}
+          push: true
           tags: |
             ghcr.io/${{ github.repository_owner	}}/helmfile:latest
-
-      - name: Image digest
-        run: echo ${{ steps.build.outputs.digest }}
+            ghcr.io/${{ github.repository_owner	}}/helmfile:${{ github.event.release.tag_name }}
