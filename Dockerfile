@@ -27,7 +27,8 @@ RUN curl -s https://baltocdn.com/helm/signing.asc | apt-key add - \
 
 # Install Helmfile
 
-RUN wget https://github.com/roboll/helmfile/releases/download/v0.139.9/helmfile_linux_amd64 -O /usr/local/bin/helmfile --no-verbose \
+ARG HELMFILE_VERSION=0.139.9
+RUN wget "https://github.com/roboll/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_linux_amd64" -O /usr/local/bin/helmfile --no-verbose \
     && chmod +x /usr/local/bin/helmfile
 
 # Install vault
