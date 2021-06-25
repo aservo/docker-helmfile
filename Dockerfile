@@ -15,9 +15,9 @@ RUN pip3 install yq
 
 # Install Kubectl
 
-RUN curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
-    && echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee /etc/apt/sources.list.d/kubernetes.list \
-    && apt-get update && apt-get install -y kubectl
+ARG KUBECTL_VERSION=1.18.2
+RUN wget "https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -O /usr/local/bin/kubectl --no-verbose \
+    && chmod +x /usr/local/bin/kubectl
 
 # Install Helm
 
