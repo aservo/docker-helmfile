@@ -1,13 +1,10 @@
 FROM ubuntu:20.04
 
-ARG DEBIAN_FRONTEND=noninteractive
-ENV TZ=Europe/Berlin
 ENV HELM_HOME="/root/.helm"
 
 # Install basic packages
 
-RUN apt-get update && apt-get install -y \
-    apt-transport-https curl git jq ncat pwgen python3-pip software-properties-common sudo wget unzip
+RUN apt-get update && apt-get install -y git jq ncat pwgen python3-pip wget unzip
 
 # Install PIP packages
 
@@ -32,7 +29,6 @@ RUN wget "https://github.com/roboll/helmfile/releases/download/v${HELMFILE_VERSI
     && chmod +x /usr/local/bin/helmfile
 
 # Install vault
-
 
 ARG VAULT_VERSION=1.7.3
 RUN wget "https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip" -O /tmp/vault.zip --no-verbose \
