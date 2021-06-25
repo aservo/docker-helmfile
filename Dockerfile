@@ -33,14 +33,10 @@ RUN wget "https://github.com/roboll/helmfile/releases/download/v${HELMFILE_VERSI
 
 # Install vault
 
-RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - \
-    && apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" \
-    && apt-get update && apt-get install -y vault
 
-# Fix vault permission problem - only do that when not running vault as server,
-# see https://stackoverflow.com/q/64284884/4278102
-
-RUN setcap cap_ipc_lock= /usr/bin/vault
+ARG VAULT_VERSION=1.7.3
+RUN wget "https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip" -O /tmp/vault.zip --no-verbose \
+    && unzip /tmp/vault.zip -d /usr/local/bin/ && rm /tmp/*
 
 # Install Helm plugins
 
