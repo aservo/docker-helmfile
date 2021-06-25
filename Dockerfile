@@ -21,9 +21,9 @@ RUN curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add 
 
 # Install Helm
 
-RUN curl -s https://baltocdn.com/helm/signing.asc | apt-key add - \
-    && echo "deb https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm-stable-debian.list \
-    && apt-get update && apt-get install -y helm
+ARG HELM_VERSION=3.6.1
+RUN wget "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" -O /tmp/helm.tgz --no-verbose \
+    && tar zxf /tmp/helm.tgz --strip-components 1 -C /usr/local/bin/ && rm /tmp/*
 
 # Install Helmfile
 
