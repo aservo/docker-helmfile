@@ -34,7 +34,7 @@ ARG VAULT_VERSION=1.7.3
 RUN wget "https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip" -O /tmp/vault.zip --no-verbose \
     && unzip /tmp/vault.zip -d /usr/local/bin/ && rm /tmp/*
 
-RUN adduser -D -u 1000 helm
+RUN adduser --disabled-password --uid 1000 helm
 
 USER helm
 
