@@ -1,12 +1,21 @@
 FROM ubuntu:20.04
 
+# Export Helm home variables
+
 ENV HELM_CACHE_HOME="/root/.cache/helm"
 ENV HELM_CONFIG_HOME="/root/.config/helm"
 ENV HELM_DATA_HOME="/root/.local/share/helm"
 
+# Export Helm variable to enable experimental OCI features
+
+ENV HELM_EXPERIMENTAL_OCI=1
+
 # Install basic packages
 
-RUN apt-get update && apt-get install -y curl git jq ncat pwgen python3-pip sudo unzip wget
+RUN \
+    apt-get update && \
+    apt-get install -y curl git jq ncat pwgen python3-pip sudo unzip wget && \
+    apt-get clean
 
 # Install PIP packages
 
