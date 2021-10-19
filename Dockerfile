@@ -1,6 +1,6 @@
 FROM ubuntu:20.04
 
-ENV HELM_HOME="/root/.helm"
+ENV HELM_HOME="/home/helm/.helm"
 
 # Install basic packages
 
@@ -34,6 +34,15 @@ ARG VAULT_VERSION=1.7.3
 RUN wget "https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip" -O /tmp/vault.zip --no-verbose \
     && unzip /tmp/vault.zip -d /usr/local/bin/ && rm /tmp/*
 
+RUN adduser -D -u 1000 helm
+
+USER helm
+
+WORKDIR /home/helm
+
 # Install Helm plugins
 
-RUN helm plugin install https://github.com/databus23/helm-diff
+RUN \
+  helm plugin install https://github.com/databus23/helm-diff && \
+  helm plugin install https://github.com/futuresimple/helm-secrets && \
+  helm plugin install https://github.com/aslafy-z/helm-git.git
