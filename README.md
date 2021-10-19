@@ -30,7 +30,7 @@ jobs:
   helmfile:
     runs-on: ubuntu-20.04
     container:
-      image: ghcr.io/aservo/helmfile:0.0.11
+      image: ghcr.io/aservo/helmfile:latest
     steps:
     - name: Helmfile Help
       uses: helmfile --help
