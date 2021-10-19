@@ -4,7 +4,7 @@ ENV HELM_HOME="/home/helm/.helm"
 
 # Install basic packages
 
-RUN apt-get update && apt-get install -y git jq ncat pwgen python3-pip wget unzip
+RUN apt-get update && apt-get install -y curl git jq ncat pwgen python3-pip sudo unzip wget
 
 # Install PIP packages
 
@@ -35,9 +35,10 @@ RUN wget "https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VE
     && unzip /tmp/vault.zip -d /usr/local/bin/ && rm /tmp/*
 
 RUN adduser --disabled-password --uid 1000 helm
+RUN adduser helm sudo
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 USER helm
-
 WORKDIR /home/helm
 
 # Install Helm plugins
