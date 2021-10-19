@@ -1,7 +1,5 @@
 FROM ubuntu:20.04
 
-ENV HELM_HOME="/home/helm/.helm"
-
 # Install basic packages
 
 RUN apt-get update && apt-get install -y curl git jq ncat pwgen python3-pip sudo unzip wget
@@ -31,16 +29,9 @@ ARG HELMFILE_VERSION=0.141.0
 RUN wget "https://github.com/roboll/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_linux_amd64" -O /usr/local/bin/helmfile --no-verbose \
     && chmod +x /usr/local/bin/helmfile
 
-RUN adduser --disabled-password --uid 1000 helm
-RUN adduser helm sudo
-RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
-USER helm
-WORKDIR /home/helm
-
 # Install Helm plugins
 
 RUN \
-  helm plugin install https://github.com/databus23/helm-diff && \
-  helm plugin install https://github.com/futuresimple/helm-secrets && \
-  helm plugin install https://github.com/aslafy-z/helm-git.git
+    helm plugin install https://github.com/databus23/helm-diff && \
+    helm plugin install https://github.com/futuresimple/helm-secrets && \
+    helm plugin install https://github.com/aslafy-z/helm-git.git
