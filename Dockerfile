@@ -1,5 +1,9 @@
 FROM ubuntu:20.04
 
+ENV HELM_CACHE_HOME="/root/.cache/helm"
+ENV HELM_CONFIG_HOME="/root/.config/helm"
+ENV HELM_DATA_HOME="/root/.local/share/helm"
+
 # Install basic packages
 
 RUN apt-get update && apt-get install -y curl git jq ncat pwgen python3-pip sudo unzip wget
