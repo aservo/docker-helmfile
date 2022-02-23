@@ -31,7 +31,7 @@ RUN \
 
 RUN \
     apt-get update && \
-    apt-get install -y git jq ncat podman pwgen python3-pip sudo unzip wget && \
+    apt-get install -y git iptables jq ncat podman pwgen python3-pip sudo unzip wget && \
     apt-get clean
 
 # Install PIP packages
