@@ -14,24 +14,21 @@ ENV HELM_DATA_HOME="/root/.local/share/helm"
 
 ENV HELM_EXPERIMENTAL_OCI=1
 
-# Install basic packages (seperation not necessary anymore with podman available in Ubuntu 20.10 or higher)
+# Install basic packages
 
 RUN \
     apt-get update && \
-    apt-get install -y curl gnupg
-
-# Configure repository for podman (will not be needed with Ubuntu 20.10 or higher anymore)
+    apt-get install -y ca-certificates curl gnupg lsb-release
 
 RUN \
-    . /etc/os-release && \
-    echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/ /" | tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list && \
-    curl -L "https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/Release.key" | apt-key add -
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list
 
 # Install main packages
 
 RUN \
     apt-get update && \
-    apt-get install -y git iptables jq ncat podman pwgen python3-pip sudo unzip wget && \
+    apt-get install -y containerd.io docker-ce docker-ce-cli git jq ncat pwgen python3-pip sudo unzip wget && \
     apt-get clean
 
 # Install PIP packages
@@ -65,9 +62,3 @@ RUN \
     helm plugin install https://github.com/databus23/helm-diff && \
     helm plugin install https://github.com/futuresimple/helm-secrets && \
     helm plugin install https://github.com/aslafy-z/helm-git.git
-
-# Create Docker 'alias' for Podman
-
-RUN \
-    echo '#!/bin/env bash\npodman --storage-driver=vfs "$@"' > /usr/bin/docker && \
-    chmod +x /usr/bin/docker
