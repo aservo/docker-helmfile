@@ -68,4 +68,6 @@ RUN \
 
 # Create Docker 'alias' for Podman
 
-RUN ln -s $(which podman) /usr/bin/docker
+RUN \
+    echo '#!/bin/env bash\npodman --storage-driver=vfs "$@"' > /usr/bin/docker && \
+    chmod +x /usr/bin/docker
