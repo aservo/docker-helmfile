@@ -18,6 +18,7 @@ This Docker image contains the following primary binaries:
 * `helm`
 * `helmfile`
 * `kubectl` (Kubernetes client)
+* `podman` (with `docker` alias)
 
 ## Example:
 
