@@ -66,6 +66,6 @@ RUN \
     helm plugin install https://github.com/futuresimple/helm-secrets && \
     helm plugin install https://github.com/aslafy-z/helm-git.git
 
-# Create Docker alias for Podman
+# Create Docker 'alias' for Podman
 
-RUN alias docker=podman
+RUN ln -s $(which podman) /usr/bin/docker
