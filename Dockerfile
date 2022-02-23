@@ -1,5 +1,9 @@
 FROM ubuntu:20.04
 
+# Run noninteractive
+
+ARG DEBIAN_FRONTEND=noninteractive
+
 # Export Helm home variables
 
 ENV HELM_CACHE_HOME="/root/.cache/helm"
@@ -10,11 +14,24 @@ ENV HELM_DATA_HOME="/root/.local/share/helm"
 
 ENV HELM_EXPERIMENTAL_OCI=1
 
-# Install basic packages
+# Install basic packages (seperation not necessary anymore with podman available in Ubuntu 20.10 or higher)
 
 RUN \
     apt-get update && \
-    apt-get install -y curl git jq ncat pwgen python3-pip sudo unzip wget && \
+    apt-get install -y curl gnupg
+
+# Configure repository for podman (will not be needed with Ubuntu 20.10 or higher anymore)
+
+RUN \
+    . /etc/os-release && \
+    echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/ /" | tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list && \
+    curl -L "https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/Release.key" | apt-key add -
+
+# Install main packages
+
+RUN \
+    apt-get update && \
+    apt-get install -y git jq ncat podman pwgen python3-pip sudo unzip wget && \
     apt-get clean
 
 # Install PIP packages
@@ -48,3 +65,7 @@ RUN \
     helm plugin install https://github.com/databus23/helm-diff && \
     helm plugin install https://github.com/futuresimple/helm-secrets && \
     helm plugin install https://github.com/aslafy-z/helm-git.git
+
+# Create Docker alias for Podman
+
+RUN alias docker=podman
