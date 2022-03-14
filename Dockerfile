@@ -52,7 +52,7 @@ RUN wget "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" -O /tmp/
 
 # Install Helmfile
 
-ARG HELMFILE_VERSION=0.143.0
+ARG HELMFILE_VERSION=0.143.1
 RUN wget "https://github.com/roboll/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_linux_amd64" -O /usr/local/bin/helmfile --no-verbose \
     && chmod +x /usr/local/bin/helmfile
 
