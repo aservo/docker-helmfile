@@ -10,10 +10,6 @@ ENV HELM_CACHE_HOME="/root/.cache/helm"
 ENV HELM_CONFIG_HOME="/root/.config/helm"
 ENV HELM_DATA_HOME="/root/.local/share/helm"
 
-# Export Helm variable to enable experimental OCI features
-
-ENV HELM_EXPERIMENTAL_OCI=1
-
 # Install basic packages
 
 RUN \
@@ -33,26 +29,26 @@ RUN \
 
 # Install PIP packages
 
-ARG AZ_VERSION=2.29.0
+ARG AZ_VERSION=2.34.1
 RUN pip3 install -Iv azure-cli==${AZ_VERSION}
 
 RUN pip3 install yq
 
 # Install Kubectl
 
-ARG KUBECTL_VERSION=1.20.5
+ARG KUBECTL_VERSION=1.21.11
 RUN wget "https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -O /usr/local/bin/kubectl --no-verbose \
     && chmod +x /usr/local/bin/kubectl
 
 # Install Helm
 
-ARG HELM_VERSION=3.7.0
+ARG HELM_VERSION=3.8.1
 RUN wget "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" -O /tmp/helm.tgz --no-verbose \
     && tar zxf /tmp/helm.tgz --strip-components 1 -C /usr/local/bin/ && rm /tmp/*
 
 # Install Helmfile
 
-ARG HELMFILE_VERSION=0.143.1
+ARG HELMFILE_VERSION=0.143.3
 RUN wget "https://github.com/roboll/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_linux_amd64" -O /usr/local/bin/helmfile --no-verbose \
     && chmod +x /usr/local/bin/helmfile
 
