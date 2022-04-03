@@ -44,9 +44,10 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build / Release
+      - name: Build / Release Helmfile image
         uses: docker/build-push-action@v2
         with:
+          file: ./Dockerfile
           # push and load may not be set together at the moment
           load: ${{ github.event_name != 'release' }}
           push: ${{ github.event_name == 'release' }}
@@ -54,9 +55,27 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/helmfile:latest
             ghcr.io/${{ github.repository_owner }}/helmfile:${{ env.TAG }}
 
-      - name: Inspect
+      - name: Build / Release Helmfile image with AZ CLI and Docker
+        uses: docker/build-push-action@v2
+        with:
+          file: ./Dockerfile-az-docker
+          # push and load may not be set together at the moment
+          load: ${{ github.event_name != 'release' }}
+          push: ${{ github.event_name == 'release' }}
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/helmfile:latest-az-docker
+            ghcr.io/${{ github.repository_owner }}/helmfile:${{ env.TAG }}-az-docker
+
+      - name: Inspect Helmfile image
         # as push and load may not be set together at the moment
         # we can only run this step in non-release builds
         if: github.event_name != 'release'
         run: |
           docker image inspect ghcr.io/${{ github.repository_owner }}/helmfile:latest
+
+      - name: Inspect Helmfile image with AZ CLI and Docker
+        # as push and load may not be set together at the moment
+        # we can only run this step in non-release builds
+        if: github.event_name != 'release'
+        run: |
+          docker image inspect ghcr.io/${{ github.repository_owner }}/helmfile:latest-az-docker
