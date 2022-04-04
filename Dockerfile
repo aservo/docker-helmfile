@@ -9,8 +9,13 @@ ARG DEBIAN_FRONTEND=noninteractive
 ARG HELMUSER=helm
 ARG HELMID=1000
 ARG HELMDIR=/${HELMUSER}
-RUN groupadd -g ${HELMID} -o ${HELMUSER}
-RUN useradd -m -u ${HELMID} -g ${HELMID} -o -d ${HELMDIR} -s /bin/bash ${HELMUSER}
+RUN groupadd -g ${HELMID} -o ${HELMUSER} && \
+    useradd -m -u ${HELMID} -g ${HELMID} -o -d ${HELMDIR} -s /bin/bash ${HELMUSER}
+
+# Add Helm user to Docker group
+
+RUN groupadd docker && \
+    usermod -aG docker ${HELMUSER}
 
 # Export Helm home variables
 
