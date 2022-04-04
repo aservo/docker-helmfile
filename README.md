@@ -13,11 +13,11 @@ See https://docs.github.com/en/actions/creating-actions/dockerfile-support-for-g
 
 This Docker image contains the following primary binaries:
 
-* `az` (Azure CLI)
+* [`az`](https://pypi.org/project/azure-cli/) (Azure CLI)
 * `git`
-* `helm`
-* `helmfile`
-* `kubectl` (Kubernetes client)
+* [`helm`](https://github.com/helm/helm/releases)
+* [`helmfile`](https://github.com/roboll/helmfile/releases)
+* [`kubectl`](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.21.md) (Kubernetes client)
 * `docker`
 
 ## Example:
