@@ -4,26 +4,31 @@ FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
+# Create Helm user and home directory for Helm data
+
+ARG HELMUSER=helm
+ARG HELMID=1000
+ARG HELMDIR=/${HELMUSER}
+RUN groupadd -g ${HELMID} -o ${HELMUSER}
+RUN useradd -m -u ${HELMID} -g ${HELMID} -o -d ${HELMDIR} -s /bin/bash ${HELMUSER}
+
 # Export Helm home variables
 
-ENV HELM_CACHE_HOME="/root/.cache/helm"
-ENV HELM_CONFIG_HOME="/root/.config/helm"
-ENV HELM_DATA_HOME="/root/.local/share/helm"
+ENV HELM_CACHE_HOME=${HELMDIR}/.cache/helm
+ENV HELM_CONFIG_HOME=${HELMDIR}/.config/helm
+ENV HELM_DATA_HOME=${HELMDIR}/.local/share/helm
 
 # Install basic packages
 
-RUN \
-    apt-get update && \
+RUN apt-get update && \
     apt-get install -y ca-certificates curl gnupg lsb-release
 
-RUN \
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg && \
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list
 
 # Install main packages
 
-RUN \
-    apt-get update && \
+RUN apt-get update && \
     apt-get install -y containerd.io docker-ce docker-ce-cli git jq ncat pwgen python3-pip sudo unzip wget && \
     apt-get clean
 
@@ -54,7 +59,9 @@ RUN wget "https://github.com/roboll/helmfile/releases/download/v${HELMFILE_VERSI
 
 # Install Helm plugins
 
-RUN \
-    helm plugin install https://github.com/databus23/helm-diff && \
+RUN helm plugin install https://github.com/databus23/helm-diff && \
     helm plugin install https://github.com/futuresimple/helm-secrets && \
     helm plugin install https://github.com/aslafy-z/helm-git.git
+
+RUN chown -R ${HELMUSER}:root ${HELMDIR} && \
+    chmod -R 777 ${HELMDIR}

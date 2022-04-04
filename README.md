@@ -4,7 +4,7 @@ Helmfile
 This is a Docker image that has been "optimized" to run with GitHub Actions.
 This means:
 
-* it is run with the `root` user
+* it can be run with the `root` user
 * it does not declare an own workdir
 
 See https://docs.github.com/en/actions/creating-actions/dockerfile-support-for-github-actions
