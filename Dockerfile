@@ -12,11 +12,6 @@ ARG HELMDIR=/${HELMUSER}
 RUN groupadd -g ${HELMID} -o ${HELMUSER} && \
     useradd -m -u ${HELMID} -g ${HELMID} -o -d ${HELMDIR} -s /bin/bash ${HELMUSER}
 
-# Add Helm user to Docker group
-
-RUN groupadd docker && \
-    usermod -aG docker ${HELMUSER}
-
 # Export Helm home variables
 
 ENV HELM_CACHE_HOME=${HELMDIR}/.cache/helm
@@ -39,20 +34,20 @@ RUN apt-get update && \
 
 # Install PIP packages
 
-ARG AZ_VERSION=2.34.1
+ARG AZ_VERSION=2.37.0
 RUN pip3 install -Iv azure-cli==${AZ_VERSION}
 
 RUN pip3 install yq
 
 # Install Kubectl
 
-ARG KUBECTL_VERSION=1.21.11
+ARG KUBECTL_VERSION=1.22.9
 RUN wget "https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -O /usr/local/bin/kubectl --no-verbose \
     && chmod +x /usr/local/bin/kubectl
 
 # Install Helm
 
-ARG HELM_VERSION=3.8.1
+ARG HELM_VERSION=3.8.2
 RUN wget "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" -O /tmp/helm.tgz --no-verbose \
     && tar zxf /tmp/helm.tgz --strip-components 1 -C /usr/local/bin/ && rm /tmp/*
 
@@ -67,6 +62,11 @@ RUN wget "https://github.com/roboll/helmfile/releases/download/v${HELMFILE_VERSI
 RUN helm plugin install https://github.com/databus23/helm-diff && \
     helm plugin install https://github.com/futuresimple/helm-secrets && \
     helm plugin install https://github.com/aslafy-z/helm-git.git
+
+# Add Helm user to Docker group
+
+RUN groupadd -f docker && \
+    usermod -aG docker ${HELMUSER}
 
 RUN chown -R ${HELMUSER}:root ${HELMDIR} && \
     chmod -R 777 ${HELMDIR}
