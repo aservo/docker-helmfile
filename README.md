@@ -17,7 +17,7 @@ This Docker image contains the following primary binaries:
 * `git`
 * [`helm`](https://github.com/helm/helm/releases)
 * [`helmfile`](https://github.com/roboll/helmfile/releases)
-* [`kubectl`](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.21.md) (Kubernetes client)
+* [`kubectl`](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.22.md) (Kubernetes client)
 * `docker`
 
 ## Example:
@@ -35,4 +35,28 @@ jobs:
     steps:
     - name: Helmfile Help
       uses: helmfile --help
+```
+
+## Development
+
+Build image:
+
+```
+docker build .
+...
+Successfully built a123b4c567de
+```
+
+Run image:
+
+```
+$ docker run -it a123b4c567de bash
+root@a123b4c567de:/#
+```
+
+Execute commands inside the container:
+
+```
+root@a123b4c567de:/# helmfile -v
+helmfile version X.Y.Z
 ```
