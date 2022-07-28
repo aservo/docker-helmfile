@@ -34,14 +34,14 @@ RUN apt-get update && \
 
 # Install PIP packages
 
-ARG AZ_VERSION=2.37.0
+ARG AZ_VERSION=2.38.0
 RUN pip3 install -Iv azure-cli==${AZ_VERSION}
 
 RUN pip3 install yq
 
 # Install Kubectl
 
-ARG KUBECTL_VERSION=1.22.9
+ARG KUBECTL_VERSION=1.22.12
 RUN wget "https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -O /usr/local/bin/kubectl --no-verbose \
     && chmod +x /usr/local/bin/kubectl
 
@@ -53,9 +53,9 @@ RUN wget "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" -O /tmp/
 
 # Install Helmfile
 
-ARG HELMFILE_VERSION=0.144.0
-RUN wget "https://github.com/roboll/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_linux_amd64" -O /usr/local/bin/helmfile --no-verbose \
-    && chmod +x /usr/local/bin/helmfile
+ARG HELMFILE_VERSION=0.145.0
+RUN wget "https://github.com/helmfile/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_${HELMFILE_VERSION}_linux_amd64.tar.gz" -O /tmp/helmfile.tgz --no-verbose \
+    && tar zxf /tmp/helmfile.tgz --strip-components 0 -C /usr/local/bin/ && rm /tmp/*
 
 # Install Helm plugins
 
