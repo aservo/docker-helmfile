@@ -1,22 +1,8 @@
-FROM ubuntu:20.04
+FROM ghcr.io/helmfile/helmfile-ubuntu:v0.145.3
 
 # Run noninteractive
 
 ARG DEBIAN_FRONTEND=noninteractive
-
-# Create Helm user and home directory for Helm data
-
-ARG HELMUSER=helm
-ARG HELMID=1000
-ARG HELMDIR=/${HELMUSER}
-RUN groupadd -g ${HELMID} -o ${HELMUSER} && \
-    useradd -m -u ${HELMID} -g ${HELMID} -o -d ${HELMDIR} -s /bin/bash ${HELMUSER}
-
-# Export Helm home variables
-
-ENV HELM_CACHE_HOME=${HELMDIR}/.cache/helm
-ENV HELM_CONFIG_HOME=${HELMDIR}/.config/helm
-ENV HELM_DATA_HOME=${HELMDIR}/.local/share/helm
 
 # Install basic packages
 
@@ -39,34 +25,7 @@ RUN pip3 install -Iv azure-cli==${AZ_VERSION}
 
 RUN pip3 install yq
 
-# Install Kubectl
+# Remove WORKDIR and ENTRYPOINT FROM base image
 
-ARG KUBECTL_VERSION=1.22.12
-RUN wget "https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -O /usr/local/bin/kubectl --no-verbose \
-    && chmod +x /usr/local/bin/kubectl
-
-# Install Helm
-
-ARG HELM_VERSION=3.8.2
-RUN wget "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" -O /tmp/helm.tgz --no-verbose \
-    && tar zxf /tmp/helm.tgz --strip-components 1 -C /usr/local/bin/ && rm /tmp/*
-
-# Install Helmfile
-
-ARG HELMFILE_VERSION=0.145.0
-RUN wget "https://github.com/helmfile/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_${HELMFILE_VERSION}_linux_amd64.tar.gz" -O /tmp/helmfile.tgz --no-verbose \
-    && tar zxf /tmp/helmfile.tgz --strip-components 0 -C /usr/local/bin/ && rm /tmp/*
-
-# Install Helm plugins
-
-RUN helm plugin install https://github.com/databus23/helm-diff && \
-    helm plugin install https://github.com/futuresimple/helm-secrets && \
-    helm plugin install https://github.com/aslafy-z/helm-git.git
-
-# Add Helm user to Docker group
-
-RUN groupadd -f docker && \
-    usermod -aG docker ${HELMUSER}
-
-RUN chown -R ${HELMUSER}:root ${HELMDIR} && \
-    chmod -R 777 ${HELMDIR}
+WORKDIR /
+ENTRYPOINT []
