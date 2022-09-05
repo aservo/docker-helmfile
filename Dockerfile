@@ -1,4 +1,4 @@
-FROM ghcr.io/helmfile/helmfile-ubuntu:v0.145.3
+FROM ghcr.io/helmfile/helmfile-ubuntu:v0.145.4
 
 # Run noninteractive
 
