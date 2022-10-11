@@ -25,6 +25,10 @@ RUN pip3 install -Iv azure-cli==${AZ_VERSION}
 
 RUN pip3 install yq
 
+# Disable Helmfile upgrade check
+
+ENV HELMFILE_UPGRADE_NOTICE_DISABLED="true"
+
 # Remove WORKDIR and ENTRYPOINT FROM base image
 
 WORKDIR /

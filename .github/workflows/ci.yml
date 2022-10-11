@@ -54,6 +54,13 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/helmfile:latest
             ghcr.io/${{ github.repository_owner }}/helmfile:${{ env.TAG }}
 
+      - name: Run Version
+        # as push and load may not be set together at the moment
+        # we can only run this step in non-release builds
+        if: github.event_name != 'release'
+        run: |
+          docker run ghcr.io/${{ github.repository_owner }}/helmfile:latest helmfile version
+
       - name: Inspect
         # as push and load may not be set together at the moment
         # we can only run this step in non-release builds
