@@ -28,6 +28,7 @@ RUN apt-get update && \
         docker-ce-cli \
         git \
         jq \
+        make \
         ncat \
         postgresql-client \
         pwgen \
