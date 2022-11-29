@@ -4,6 +4,16 @@ FROM ghcr.io/helmfile/helmfile-ubuntu:v0.148.1
 
 ARG DEBIAN_FRONTEND=noninteractive
 
+# Allow running with any other user than root.
+# TODO: Remove again when https://github.com/helmfile/helmfile/pull/546 has been merged and released!
+
+ARG HELM_CACHE_HOME="/root/.cache/helm"
+ENV HELM_CACHE_HOME="${HELM_CACHE_HOME}"
+ARG HELM_CONFIG_HOME="/root/.config/helm"
+ENV HELM_CONFIG_HOME="${HELM_CONFIG_HOME}"
+ARG HELM_DATA_HOME="/root/.local/share/helm"
+ENV HELM_DATA_HOME="${HELM_DATA_HOME}"
+
 # Install basic packages
 
 RUN apt-get update && \
