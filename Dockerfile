@@ -61,6 +61,13 @@ RUN pip3 install yq
 
 ENV HELMFILE_UPGRADE_NOTICE_DISABLED="true"
 
+# Allow any other user other than root to fully access the /root dir.
+# This should be improved when it's clear which 'HOME' directory is used by the Helmfile image in the future.
+# TODO: Remove again when https://github.com/helmfile/helmfile/pull/546 has been merged and released!
+
+ENV HOME="/root"
+RUN chmod 777 ${HOME}
+
 # Remove WORKDIR and ENTRYPOINT FROM base image
 
 WORKDIR /
