@@ -68,6 +68,11 @@ ENV HELMFILE_UPGRADE_NOTICE_DISABLED="true"
 ENV HOME="/root"
 RUN chmod 777 ${HOME}
 
+RUN groupadd -g 1000 helmfile && \
+    useradd -m -u 1000 -g helmfile helmfile
+
+USER helmfile
+
 # Remove WORKDIR and ENTRYPOINT FROM base image
 
 WORKDIR /
