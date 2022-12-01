@@ -66,7 +66,7 @@ ENV HELMFILE_UPGRADE_NOTICE_DISABLED="true"
 # TODO: Remove again when https://github.com/helmfile/helmfile/pull/546 has been merged and released!
 
 ENV HOME="/root"
-RUN chmod 777 ${HOME}
+RUN chmod -R 777 ${HOME}
 
 RUN groupadd -g 1000 helmfile && \
     useradd -m -u 1000 -g helmfile helmfile
