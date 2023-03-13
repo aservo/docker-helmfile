@@ -28,7 +28,7 @@ jobs:
     steps:
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -57,6 +57,17 @@ jobs:
           load: true
           tags: ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}:${{ env.TAG }}
 
+      - name: Versions (Tests)
+        run: |
+          # make sure the kubectl binary can be found and executed
+          docker run ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}:${{ env.TAG }} kubectl version --client=true --short
+          # make sure the helm binary can be found and executed
+          docker run ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}:${{ env.TAG }} helm version
+          # make sure the helm plugins can be found and executed (just test diff)
+          docker run ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}:${{ env.TAG }} helm diff version
+          # make sure helmfile binary can be found and executed
+          docker run ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}:${{ env.TAG }} helmfile version
+
       - name: Push
         run: |
           docker push ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}:${{ env.TAG }}
@@ -67,11 +78,6 @@ jobs:
           docker tag  ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}:${{ env.TAG }} \
                       ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}:latest
           docker push ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}:latest
-
-      - name: Run version
-        run: |
-          docker run ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}:${{ env.TAG }} helm version
-          docker run ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}:${{ env.TAG }} helmfile version
 
       - name: Inspect
         run: |
