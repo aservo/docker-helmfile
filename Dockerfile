@@ -1,4 +1,6 @@
-FROM ghcr.io/helmfile/helmfile-ubuntu:v0.148.1
+ARG HELMFILE_VERSION=0.151.0
+
+FROM ghcr.io/helmfile/helmfile-ubuntu:v${HELMFILE_VERSION}
 
 # Run noninteractive
 
@@ -52,7 +54,7 @@ RUN apt-get update && \
 
 # Install PIP packages
 
-ARG AZ_VERSION=2.42.0
+ARG AZ_VERSION=2.46.0
 RUN pip3 install -Iv azure-cli==${AZ_VERSION}
 
 RUN pip3 install yq
