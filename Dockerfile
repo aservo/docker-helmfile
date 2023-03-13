@@ -36,10 +36,20 @@ RUN pip3 install yq
 
 ENV HELMFILE_UPGRADE_NOTICE_DISABLED="true"
 
-RUN groupadd -g 1000 helmfile && \
-    useradd -m -u 1000 -g helmfile helmfile
+# Configure Helmfile user and group (using HOME from upstream image)
 
-USER helmfile
+ARG HELMFILE_UID=1000
+ARG HELMFILE_GID=${HELMFILE_UID}
+ARG HELMFILE_USER="helmfile"
+ARG HELMFILE_GROUP=${HELMFILE_USER}
+
+RUN groupadd -g ${HELMFILE_GID} ${HELMFILE_GROUP} && \
+    useradd -m -u ${HELMFILE_UID} -g ${HELMFILE_GROUP} ${HELMFILE_USER}
+
+RUN chown -R root:${HELMFILE_GROUP} ${HOME} && \
+    chmod -R 770 ${HOME}
+
+USER ${HELMFILE_USER}
 
 # Remove WORKDIR and ENTRYPOINT FROM base image
 

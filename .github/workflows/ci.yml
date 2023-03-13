@@ -67,6 +67,8 @@ jobs:
           docker run ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}:${{ env.TAG }} helm diff version
           # make sure helmfile binary can be found and executed
           docker run ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}:${{ env.TAG }} helmfile version
+          # make sure az binary can be found and executed
+          docker run ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}:${{ env.TAG }} az version
 
       - name: Push
         run: |
