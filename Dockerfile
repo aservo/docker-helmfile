@@ -16,28 +16,11 @@ ENV HELM_CONFIG_HOME="${HELM_CONFIG_HOME}"
 ARG HELM_DATA_HOME="/root/.local/share/helm"
 ENV HELM_DATA_HOME="${HELM_DATA_HOME}"
 
-# Install basic packages
-
-RUN apt-get update && \
-    apt-get --no-install-recommends --yes install \
-        ca-certificates \
-        curl \
-        gnupg \
-        lsb-release \
-        && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg && \
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list
-
 # Install main packages
 
 RUN apt-get update && \
     apt-get --no-install-recommends --yes install \
-        containerd.io \
-        docker-ce \
-        docker-ce-cli \
+        curl \
         git \
         jq \
         make \
@@ -55,7 +38,6 @@ RUN apt-get update && \
 # Install PIP packages
 
 ARG AZ_VERSION=2.46.0
-
 RUN pip3 install -Iv azure-cli==${AZ_VERSION}
 
 RUN pip3 install yq
