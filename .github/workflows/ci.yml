@@ -60,7 +60,7 @@ jobs:
       - name: Versions (Tests)
         run: |
           # make sure the kubectl binary can be found and executed
-          docker run ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}:${{ env.TAG }} kubectl version --client=true --short
+          docker run ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}:${{ env.TAG }} kubectl version --client=true
           # make sure the helm binary can be found and executed
           docker run ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}:${{ env.TAG }} helm version
           # make sure the helm plugins can be found and executed (just test diff)
